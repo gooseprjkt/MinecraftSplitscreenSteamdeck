@@ -5,9 +5,9 @@
 # @file        cleanup-minecraft-splitscreen.sh
 # @version     1.0.0
 # @date        2026-02-01
-# @author      aradanmn
+# @author      gooseprjkt
 # @license     MIT
-# @repository  https://github.com/aradanmn/MinecraftSplitscreenSteamdeck
+# @repository  https://github.com/gooseprjkt/MinecraftSplitscreenSteamdeck
 #
 # @description
 #   Removes all components installed by the Minecraft Splitscreen installer.
@@ -33,13 +33,13 @@ FORCE=false
 KEEP_JAVA=true  # Default to keeping Java (it's useful for other things)
 
 # Flatpak IDs
-readonly PRISM_FLATPAK_ID="org.prismlauncher.PrismLauncher"
+readonly PRISM_FLATPAK_ID="io.github.ElyPrismLauncher.ElyPrismLauncher"
 
 # Data directories to clean
 PATHS_TO_CLEAN=(
-    # PrismLauncher data directories
-    "$HOME/.local/share/PrismLauncher"
-    "$HOME/.var/app/org.prismlauncher.PrismLauncher"
+    # ElyPrismLauncher data directories
+    "$HOME/.local/share/ElyPrismLauncher"
+    "$HOME/.var/app/io.github.ElyPrismLauncher.ElyPrismLauncher"
 
     # Logs
     "$HOME/.local/share/MinecraftSplitscreen"
@@ -149,20 +149,20 @@ cleanup_flatpaks() {
         return 0
     fi
 
-    # Check and remove PrismLauncher Flatpak
+    # Check and remove ElyPrismLauncher Flatpak
     if flatpak list --app 2>/dev/null | grep -q "$PRISM_FLATPAK_ID"; then
         if [[ "$DRY_RUN" == true ]]; then
-            print_dry "Uninstall Flatpak: PrismLauncher ($PRISM_FLATPAK_ID)"
+            print_dry "Uninstall Flatpak: ElyPrismLauncher ($PRISM_FLATPAK_ID)"
         else
-            print_info "Uninstalling PrismLauncher Flatpak..."
+            print_info "Uninstalling ElyPrismLauncher Flatpak..."
             if flatpak uninstall -y --noninteractive "$PRISM_FLATPAK_ID" 2>/dev/null; then
-                print_success "Removed PrismLauncher Flatpak"
+                print_success "Removed ElyPrismLauncher Flatpak"
             else
-                print_warning "Failed to remove PrismLauncher Flatpak (may need: flatpak uninstall $PRISM_FLATPAK_ID)"
+                print_warning "Failed to remove ElyPrismLauncher Flatpak (may need: flatpak uninstall $PRISM_FLATPAK_ID)"
             fi
         fi
     else
-        print_info "PrismLauncher Flatpak not installed"
+        print_info "ElyPrismLauncher Flatpak not installed"
     fi
 }
 
@@ -241,12 +241,12 @@ show_summary() {
 
     echo ""
     echo "This script will remove:"
-    echo "  - PrismLauncher data and AppImage (~/.local/share/PrismLauncher)"
-    echo "  - PrismLauncher Flatpak data (~/.var/app/org.prismlauncher.PrismLauncher)"
+    echo "  - ElyPrismLauncher data and AppImage (~/.local/share/ElyPrismLauncher)"
+    echo "  - ElyPrismLauncher Flatpak data (~/.var/app/io.github.ElyPrismLauncher.ElyPrismLauncher)"
     echo "  - Minecraft instances (latestUpdate-1 through latestUpdate-4)"
     echo "  - Desktop shortcuts and application menu entries"
     echo "  - Installer logs (~/.local/share/MinecraftSplitscreen)"
-    echo "  - PrismLauncher Flatpak application"
+    echo "  - ElyPrismLauncher Flatpak application"
     echo ""
 
     if [[ "$KEEP_JAVA" == true ]]; then
@@ -266,24 +266,24 @@ show_detected_components() {
 
     local found_any=false
 
-    # Check PrismLauncher
-    if [[ -d "$HOME/.local/share/PrismLauncher" ]]; then
+    # Check ElyPrismLauncher
+    if [[ -d "$HOME/.local/share/ElyPrismLauncher" ]]; then
         local size
-        size=$(du -sh "$HOME/.local/share/PrismLauncher" 2>/dev/null | cut -f1) || size="?"
-        print_info "PrismLauncher AppImage data: $size"
+        size=$(du -sh "$HOME/.local/share/ElyPrismLauncher" 2>/dev/null | cut -f1) || size="?"
+        print_info "ElyPrismLauncher AppImage data: $size"
         found_any=true
     fi
-    if [[ -d "$HOME/.var/app/org.prismlauncher.PrismLauncher" ]]; then
+    if [[ -d "$HOME/.var/app/io.github.ElyPrismLauncher.ElyPrismLauncher" ]]; then
         local size
-        size=$(du -sh "$HOME/.var/app/org.prismlauncher.PrismLauncher" 2>/dev/null | cut -f1) || size="?"
-        print_info "PrismLauncher Flatpak data: $size"
+        size=$(du -sh "$HOME/.var/app/io.github.ElyPrismLauncher.ElyPrismLauncher" 2>/dev/null | cut -f1) || size="?"
+        print_info "ElyPrismLauncher Flatpak data: $size"
         found_any=true
     fi
 
     # Check Flatpaks
     if command -v flatpak &>/dev/null; then
         if flatpak list --app 2>/dev/null | grep -q "$PRISM_FLATPAK_ID"; then
-            print_info "PrismLauncher Flatpak app installed"
+            print_info "ElyPrismLauncher Flatpak app installed"
             found_any=true
         fi
     fi

@@ -5,9 +5,9 @@
 # @file        utilities.sh
 # @version     3.0.1
 # @date        2026-02-07
-# @author      aradanmn
+# @author      gooseprjkt
 # @license     MIT
-# @repository  https://github.com/aradanmn/MinecraftSplitscreenSteamdeck
+# @repository  https://github.com/gooseprjkt/MinecraftSplitscreenSteamdeck
 #
 # @description
 #   Core utility functions for the Minecraft Splitscreen installer.
@@ -29,7 +29,7 @@
 #     - get_log_file            : Get current log file path
 #     - prompt_user             : Get user input (works with curl | bash)
 #     - prompt_yes_no           : Simplified yes/no prompts
-#     - get_prism_executable    : Locate PrismLauncher executable
+#     - get_prism_executable    : Locate ElyPrismLauncher executable
 #     - is_immutable_os         : Detect immutable Linux distributions
 #     - should_prefer_flatpak   : Determine preferred package format
 #     - check_dynamic_mode_dependencies : Check optional dynamic mode tools
@@ -226,11 +226,11 @@ prompt_yes_no() {
 
 # -----------------------------------------------------------------------------
 # @function    get_prism_executable
-# @description Locates the PrismLauncher executable, checking for both the
+# @description Locates the ElyPrismLauncher executable, checking for both the
 #              standard AppImage and extracted squashfs-root version (used
 #              when FUSE is unavailable).
 # @param       None
-# @global      PRISMLAUNCHER_DIR - Base directory for PrismLauncher installation
+# @global      PRISMLAUNCHER_DIR - Base directory for ElyPrismLauncher installation
 # @stdout      Path to the executable if found
 # @return      0 if executable found, 1 if not found
 # @example
@@ -241,8 +241,8 @@ prompt_yes_no() {
 get_prism_executable() {
     if [[ -x "$PRISMLAUNCHER_DIR/squashfs-root/AppRun" ]]; then
         echo "$PRISMLAUNCHER_DIR/squashfs-root/AppRun"
-    elif [[ -x "$PRISMLAUNCHER_DIR/PrismLauncher.AppImage" ]]; then
-        echo "$PRISMLAUNCHER_DIR/PrismLauncher.AppImage"
+    elif [[ -x "$PRISMLAUNCHER_DIR/ElyPrismLauncher.AppImage" ]]; then
+        echo "$PRISMLAUNCHER_DIR/ElyPrismLauncher.AppImage"
     else
         return 1
     fi
@@ -338,7 +338,7 @@ is_immutable_os() {
 # @return      0 if Flatpak preferred, 1 if AppImage preferred
 # @example
 #   if should_prefer_flatpak; then
-#       flatpak install --user flathub org.prismlauncher.PrismLauncher
+#       flatpak install --user flathub io.github.ElyPrismLauncher.ElyPrismLauncher
 #   else
 #       wget -O app.AppImage "$appimage_url"
 #   fi
@@ -525,7 +525,7 @@ show_dynamic_mode_install_hints() {
 #              1 on failure (source file not found)
 #
 # @example
-#   merge_accounts_json "/tmp/splitscreen_accounts.json" "$HOME/.local/share/PrismLauncher/accounts.json"
+#   merge_accounts_json "/tmp/splitscreen_accounts.json" "$HOME/.local/share/ElyPrismLauncher/accounts.json"
 #
 # @note        Requires jq for proper merging. Without jq, existing accounts
 #              will be overwritten with splitscreen accounts only.

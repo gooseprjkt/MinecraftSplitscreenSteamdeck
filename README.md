@@ -4,9 +4,9 @@ This project provides an easy way to set up splitscreen Minecraft on Steam Deck 
 
 ## Features
 - **Automatic Java Installation:** Detects required Java version and installs automatically (no manual setup required)
-- **Automated Installation:** Uses PrismLauncher for both instance creation and gameplay
+- **Automated Installation:** Uses ElyPrismLauncher for both instance creation and gameplay
 - **Auto-Generated Launcher Script:** The splitscreen launcher is generated at install time with correct paths baked in - no hardcoded paths
-- **Flatpak & AppImage Support:** Works with both Flatpak and AppImage installations of PrismLauncher
+- **Flatpak & AppImage Support:** Works with both Flatpak and AppImage installations of ElyPrismLauncher
 - **Smart Launcher Detection:** Automatically detects existing launcher installations and uses them
 - Launch 1–4 Minecraft instances in splitscreen mode with proper Fabric support
 - Automatic controller detection and per-player config
@@ -18,7 +18,7 @@ This project provides an easy way to set up splitscreen Minecraft on Steam Deck 
 - **Automatic Dependency Resolution:** Uses live API calls to discover and install all mod dependencies without manual maintenance
 - **Smart Cleanup:** Automatically removes temporary files and directories after successful setup
 
-> **Note:** As of February 2026, PollyMC is no longer maintained. PrismLauncher is now used exclusively. A Microsoft account is required for Minecraft Java Edition.
+> **Note:** As of February 2026, PollyMC is no longer maintained. ElyPrismLauncher is now used exclusively. A Offline account is required for Minecraft Java Edition.
 
 ## Dynamic Splitscreen Mode (v3.0.0)
 
@@ -89,10 +89,10 @@ sudo zypper install inotify-tools xdotool wmctrl libnotify-tools
 
 ## Installation Process
 
-PrismLauncher handles both automated instance creation and gameplay. It provides excellent CLI automation for reliable instance setup with proper Fabric integration. A Microsoft account is required to launch Minecraft Java Edition through PrismLauncher.
+ElyPrismLauncher handles both automated instance creation and gameplay. It provides excellent CLI automation for reliable instance setup with proper Fabric integration. A Offline account is required to launch Minecraft Java Edition through ElyPrismLauncher.
 
 ## What gets installed
-- [PrismLauncher](https://prismlauncher.org/) (primary launcher — Flatpak or AppImage)
+- [ElyPrismLauncher](https://elyprismlauncher.org/) (primary launcher — Flatpak or AppImage)
 - **Minecraft version:** User-selectable (defaults to latest stable release, with 4 separate instances for splitscreen)
 - **Fabric Loader:** Complete dependency chain including LWJGL 3, Minecraft, Intermediary Mappings, and Fabric Loader
 - **Mods included (automatically installed):**
@@ -121,7 +121,7 @@ PrismLauncher handles both automated instance creation and gameplay. It provides
   - *Note: These dependencies are automatically downloaded when a mod that requires them is selected*
 
 ## Installation Features
-- **CLI-driven instance creation:** Automated setup using PrismLauncher's command-line interface
+- **CLI-driven instance creation:** Automated setup using ElyPrismLauncher's command-line interface
 - **Intelligent version selection:** Only offers Minecraft versions that are fully compatible with both required splitscreen mods (Controllable and Splitscreen Support)
 - **Fabric compatibility verification:** All mods are filtered to ensure they're Fabric-compatible versions
 - **Automatic dependency resolution:** Uses Modrinth and CurseForge APIs to automatically discover and install all required mod dependencies
@@ -134,19 +134,19 @@ PrismLauncher handles both automated instance creation and gameplay. It provides
    
    Run this single command to download and execute the installer:
    ```sh
-   curl -fsSL https://raw.githubusercontent.com/aradanmn/MinecraftSplitscreenSteamdeck/main/install-minecraft-splitscreen.sh | bash
+   curl -fsSL https://raw.githubusercontent.com/gooseprjkt/MinecraftSplitscreenSteamdeck/main/install-minecraft-splitscreen.sh | bash
    ```
    
    **Alternative method** (download first, then run):
    ```sh
-   wget https://raw.githubusercontent.com/aradanmn/MinecraftSplitscreenSteamdeck/main/install-minecraft-splitscreen.sh
+   wget https://raw.githubusercontent.com/gooseprjkt/MinecraftSplitscreenSteamdeck/main/install-minecraft-splitscreen.sh
    chmod +x install-minecraft-splitscreen.sh
    ./install-minecraft-splitscreen.sh
    ```
    
    **Note:** The installer will automatically detect which Java version you need based on your selected Minecraft version and install it if not present. No manual Java setup required!
    
-   **Note:** If you already have PrismLauncher installed (via Flatpak or AppImage), the installer will detect and use your existing installation.
+   **Note:** If you already have ElyPrismLauncher installed (via Flatpak or AppImage), the installer will detect and use your existing installation.
 
 2. **Install Python 3 (optional)**
    - Only required if you want to add the launcher to Steam automatically
@@ -176,7 +176,7 @@ PrismLauncher handles both automated instance creation and gameplay. It provides
      - Choose "y" to create a desktop shortcut and add to your applications menu
      - Choose "n" if you only want to launch from Steam or manually
    - **Installation progress:** The installer will show detailed progress including:
-     - PrismLauncher download and CLI verification
+     - ElyPrismLauncher download and CLI verification
      - Instance creation (4 separate Minecraft instances for splitscreen)
      - Launcher script generation
      - Automatic Java version detection and installation (if needed)
@@ -228,12 +228,12 @@ If you want to use the Steam Deck's built-in controls as Player 1 AND connect ex
 ## Installation Locations
 
 **AppImage installations:**
-- **Primary installation:** `~/.local/share/PrismLauncher/` (instances, launcher, and game files)
-- **Launcher script:** `~/.local/share/PrismLauncher/minecraftSplitscreen.sh` (auto-generated)
+- **Primary installation:** `~/.local/share/ElyPrismLauncher/` (instances, launcher, and game files)
+- **Launcher script:** `~/.local/share/ElyPrismLauncher/minecraftSplitscreen.sh` (auto-generated)
 
 **Flatpak installations:**
-- **Primary installation:** `~/.var/app/org.prismlauncher.PrismLauncher/data/PrismLauncher/`
-- **Launcher script:** `~/.var/app/org.prismlauncher.PrismLauncher/data/PrismLauncher/minecraftSplitscreen.sh` (auto-generated)
+- **Primary installation:** `~/.var/app/io.github.ElyPrismLauncher.ElyPrismLauncher/data/ElyPrismLauncher/`
+- **Launcher script:** `~/.var/app/io.github.ElyPrismLauncher.ElyPrismLauncher/data/ElyPrismLauncher/minecraftSplitscreen.sh` (auto-generated)
 
 **Note:** The launcher script is automatically generated during installation with the correct paths for your system. It includes version metadata for troubleshooting.
 
@@ -256,7 +256,7 @@ To update the launcher script, simply re-run the installer. The script will be r
 ### Minecraft Version Updates
 To update your Minecraft version or mod configuration, re-run the installer:
 ```sh
-curl -fsSL https://raw.githubusercontent.com/aradanmn/MinecraftSplitscreenSteamdeck/main/install-minecraft-splitscreen.sh | bash
+curl -fsSL https://raw.githubusercontent.com/gooseprjkt/MinecraftSplitscreenSteamdeck/main/install-minecraft-splitscreen.sh | bash
 ```
 Select your new Minecraft version when prompted. The installer will:
    - Preserve your existing options.txt settings (keybindings, video settings, etc.)
@@ -273,7 +273,7 @@ Use the cleanup script to remove all installed components:
 
 ```bash
 # Download and run the cleanup script
-curl -fsSL https://raw.githubusercontent.com/aradanmn/MinecraftSplitscreenSteamdeck/main/cleanup-minecraft-splitscreen.sh -o cleanup.sh
+curl -fsSL https://raw.githubusercontent.com/gooseprjkt/MinecraftSplitscreenSteamdeck/main/cleanup-minecraft-splitscreen.sh -o cleanup.sh
 chmod +x cleanup.sh
 
 # Preview what will be removed (dry-run mode)
@@ -287,8 +287,8 @@ chmod +x cleanup.sh
 ```
 
 The cleanup script removes:
-- PrismLauncher data directories (AppImage and Flatpak)
-- PrismLauncher Flatpak application
+- ElyPrismLauncher data directories (AppImage and Flatpak)
+- ElyPrismLauncher Flatpak application
 - Desktop shortcuts and app menu entries
 - Installer logs
 
@@ -297,14 +297,14 @@ The cleanup script removes:
 ### Manual Uninstall
 
 If you prefer manual removal:
-- **AppImage installations:** Delete the PrismLauncher folder: `rm -rf ~/.local/share/PrismLauncher`
-- **Flatpak installations:** Delete the PrismLauncher data: `rm -rf ~/.var/app/org.prismlauncher.PrismLauncher/data/PrismLauncher`
+- **AppImage installations:** Delete the ElyPrismLauncher folder: `rm -rf ~/.local/share/ElyPrismLauncher`
+- **Flatpak installations:** Delete the ElyPrismLauncher data: `rm -rf ~/.var/app/io.github.ElyPrismLauncher.ElyPrismLauncher/data/ElyPrismLauncher`
 - Remove any desktop or Steam shortcuts you created.
 
 ## Credits
 - Inspired by [ArnoldSmith86/minecraft-splitscreen](https://github.com/ArnoldSmith86/minecraft-splitscreen) (original concept/script, but this project is mostly a full rewrite).
 - Additional contributions by [FlyingEwok](https://github.com/FlyingEwok) and others.
-- Uses [PrismLauncher](https://github.com/PrismLauncher/PrismLauncher) for instance creation and gameplay.
+- Uses [ElyPrismLauncher](https://github.com/ElyPrismLauncher/ElyPrismLauncher) for instance creation and gameplay.
 - Steam Deck Java installation script by [FlyingEwok](https://github.com/FlyingEwok/install-jdk-on-steam-deck) - provides seamless Java installation for Steam Deck's read-only filesystem with automatic version detection.
 - Steam Deck controller auto-disable tool by [scawp](https://github.com/scawp/Steam-Deck.Auto-Disable-Steam-Controller) - optional tool for advanced use cases where you want to use Steam Deck's built-in controls alongside external controllers simultaneously.
 
@@ -315,7 +315,7 @@ If you prefer manual removal:
 - **Complete Fabric Dependency Chain:** Ensures mods load and function correctly by including LWJGL 3, Minecraft, Intermediary Mappings, and Fabric Loader with proper dependency references
 - **API Filtering:** Both Modrinth and CurseForge APIs are filtered to only download Fabric-compatible mod versions
 - **Automatic Dependency Resolution:** Recursively resolves all mod dependencies using live API calls, eliminating the need to manually maintain dependency lists
-- **PrismLauncher Integration:** Uses PrismLauncher's reliable CLI automation for both instance creation and gameplay
+- **ElyPrismLauncher Integration:** Uses ElyPrismLauncher's reliable CLI automation for both instance creation and gameplay
 - **Smart Cleanup:** Automatically removes temporary build files and directories after successful setup
 - **Enhanced Error Handling:** Multiple fallback mechanisms and retry strategies for robust installation
 
@@ -336,7 +336,7 @@ If you prefer manual removal:
 - ✅ **Architecture-Aware Downloads**: Automatically downloads correct AppImage for x86_64 or ARM64 systems
 - ✅ **Improved Timeout Handling**: Clear indication of user input vs timeout defaults in prompts
 - ✅ **Auto-Generated Launcher Script**: The splitscreen launcher is now generated at install time with correct paths baked in - no more hardcoded paths
-- ✅ **Flatpak Support**: Works with both Flatpak and AppImage installations of PrismLauncher
+- ✅ **Flatpak Support**: Works with both Flatpak and AppImage installations of ElyPrismLauncher
 - ✅ **Smart Launcher Detection**: Automatically detects existing launcher installations and uses them instead of downloading new ones
 - ✅ **Version Metadata**: Generated scripts include version, commit hash, and generation date for easier troubleshooting
 - ✅ **Automatic Java Installation**: No manual Java setup required - the installer automatically detects, downloads, and installs the correct Java version for your chosen Minecraft version
@@ -350,4 +350,4 @@ If you prefer manual removal:
 
 
 ---
-For more details, see the comments in the scripts or open an issue on the [GitHub repo](https://github.com/aradanmn/MinecraftSplitscreenSteamdeck).
+For more details, see the comments in the scripts or open an issue on the [GitHub repo](https://github.com/gooseprjkt/MinecraftSplitscreenSteamdeck).

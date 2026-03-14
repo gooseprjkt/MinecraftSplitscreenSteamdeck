@@ -5,17 +5,17 @@
 # @file        path_configuration.sh
 # @version     3.0.1
 # @date        2026-03-07
-# @author      aradanmn
+# @author      gooseprjkt
 # @license     MIT
-# @repository  https://github.com/aradanmn/MinecraftSplitscreenSteamdeck
+# @repository  https://github.com/gooseprjkt/MinecraftSplitscreenSteamdeck
 #
 # @description
 #   Centralizes ALL path definitions and launcher detection for the Minecraft
 #   Splitscreen installer. All other modules MUST use these variables and
 #   functions - DO NOT hardcode paths anywhere else.
 #
-#   PrismLauncher is the sole launcher used for both instance creation and gameplay.
-#   The CREATION and ACTIVE launcher variables both point to PrismLauncher.
+#   ElyPrismLauncher is the sole launcher used for both instance creation and gameplay.
+#   The CREATION and ACTIVE launcher variables both point to ElyPrismLauncher.
 #
 # @dependencies
 #   - flatpak (optional, for Flatpak detection)
@@ -23,15 +23,15 @@
 #
 # @exports
 #   Constants:
-#     - PRISM_FLATPAK_ID          : PrismLauncher Flatpak application ID
-#     - PRISM_APPIMAGE_DATA_DIR   : PrismLauncher AppImage data directory
-#     - PRISM_FLATPAK_DATA_DIR    : PrismLauncher Flatpak data directory
-#     - PRISM_APPIMAGE_PATH       : Path to PrismLauncher AppImage
+#     - PRISM_FLATPAK_ID          : ElyPrismLauncher Flatpak application ID
+#     - PRISM_APPIMAGE_DATA_DIR   : ElyPrismLauncher AppImage data directory
+#     - PRISM_FLATPAK_DATA_DIR    : ElyPrismLauncher Flatpak data directory
+#     - PRISM_APPIMAGE_PATH       : Path to ElyPrismLauncher AppImage
 #
 #   Variables (set by configure_launcher_paths):
 #     - PREFER_FLATPAK            : Whether to prefer Flatpak over AppImage (true/false)
 #     - IMMUTABLE_OS_DETECTED     : Whether running on immutable OS (true/false)
-#     - ACTIVE_LAUNCHER           : Active launcher name ("prismlauncher")
+#     - ACTIVE_LAUNCHER           : Active launcher name ("elyelyelyprismlauncher")
 #     - ACTIVE_LAUNCHER_TYPE      : Active launcher type ("appimage"/"flatpak")
 #     - ACTIVE_DATA_DIR           : Active launcher data directory
 #     - ACTIVE_INSTANCES_DIR      : Active launcher instances directory
@@ -46,9 +46,9 @@
 #   Functions:
 #     - is_flatpak_installed            : Check if Flatpak app is installed
 #     - is_appimage_available           : Check if AppImage exists
-#     - detect_prismlauncher            : Detect PrismLauncher installation
+#     - detect_elyelyelyprismlauncher            : Detect ElyPrismLauncher installation
 #     - configure_launcher_paths        : Main configuration function
-#     - set_creation_launcher_prismlauncher : Set PrismLauncher as creation launcher
+#     - set_creation_launcher_elyelyelyprismlauncher : Set ElyPrismLauncher as creation launcher
 #     - finalize_launcher_paths         : Finalize and verify configuration
 #     - get_creation_instances_dir      : Get creation instances directory
 #     - get_active_instances_dir        : Get active instances directory
@@ -62,32 +62,32 @@
 #     - print_path_configuration        : Debug print all paths
 #
 # @changelog
-#   3.0.1 (2026-03-07) - Removed PollyMC; PrismLauncher is now the sole launcher
+#   3.0.1 (2026-03-07) - Removed PollyMC; ElyPrismLauncher is now the sole launcher
 #   2.1.0 (2026-01-31) - Added architecture detection for PollyMC AppImage (x86_64/arm64)
 #   2.0.2 (2026-01-25) - Fix: Don't create directories in configure_launcher_paths() detection phase
 #   2.0.1 (2026-01-25) - Centralized PREFER_FLATPAK decision; set once, used by all modules
 #   2.0.0 (2026-01-25) - Rebased to 2.x for fork; added comprehensive JSDoc documentation
 #   1.1.1 (2026-01-25) - Prefer Flatpak over AppImage on immutable OS (Bazzite, SteamOS, etc.)
-#   1.1.0 (2026-01-24) - Added revert_to_prismlauncher function
+#   1.1.0 (2026-01-24) - Added revert_to_elyelyelyprismlauncher function
 #   1.0.0 (2026-01-23) - Initial version with centralized path management
 # =============================================================================
 
 # =============================================================================
 # LAUNCHER IDENTIFIERS (Constants)
 # =============================================================================
-readonly PRISM_FLATPAK_ID="org.prismlauncher.PrismLauncher"
+readonly PRISM_FLATPAK_ID="io.github.ElyPrismLauncher.ElyPrismLauncher"
 
 # =============================================================================
 # BASE PATH DEFINITIONS (Constants)
 # =============================================================================
 # AppImage data directories (where AppImage launchers store their data)
-readonly PRISM_APPIMAGE_DATA_DIR="$HOME/.local/share/PrismLauncher"
+readonly PRISM_APPIMAGE_DATA_DIR="$HOME/.local/share/ElyPrismLauncher"
 
 # Flatpak data directories (where Flatpak launchers store their data)
-readonly PRISM_FLATPAK_DATA_DIR="$HOME/.var/app/${PRISM_FLATPAK_ID}/data/PrismLauncher"
+readonly PRISM_FLATPAK_DATA_DIR="$HOME/.var/app/${PRISM_FLATPAK_ID}/data/ElyPrismLauncher"
 
 # AppImage executable location
-readonly PRISM_APPIMAGE_PATH="$PRISM_APPIMAGE_DATA_DIR/PrismLauncher.AppImage"
+readonly PRISM_APPIMAGE_PATH="$PRISM_APPIMAGE_DATA_DIR/ElyPrismLauncher.AppImage"
 
 # =============================================================================
 # SYSTEM DETECTION VARIABLES
@@ -107,7 +107,7 @@ IMMUTABLE_OS_DETECTED=false
 # These are set by configure_launcher_paths() based on what's detected
 
 # Primary launcher (the one used for gameplay)
-ACTIVE_LAUNCHER=""           # "prismlauncher"
+ACTIVE_LAUNCHER=""           # "elyelyelyprismlauncher"
 ACTIVE_LAUNCHER_TYPE=""      # "appimage" or "flatpak"
 ACTIVE_DATA_DIR=""           # Where launcher stores its data
 ACTIVE_INSTANCES_DIR=""      # Where instances are stored
@@ -115,7 +115,7 @@ ACTIVE_EXECUTABLE=""         # Command to run the launcher
 ACTIVE_LAUNCHER_SCRIPT=""    # Path to minecraftSplitscreen.sh
 
 # Creation launcher (used for initial instance creation)
-CREATION_LAUNCHER=""         # "prismlauncher"
+CREATION_LAUNCHER=""         # "elyelyelyprismlauncher"
 CREATION_LAUNCHER_TYPE=""    # "appimage" or "flatpak"
 CREATION_DATA_DIR=""         # Where to create instances
 CREATION_INSTANCES_DIR=""    # Instance creation directory
@@ -128,11 +128,11 @@ CREATION_EXECUTABLE=""       # Command to run creation launcher
 # -----------------------------------------------------------------------------
 # @function    is_flatpak_installed
 # @description Checks if a Flatpak application is installed on the system.
-# @param       $1 - Flatpak application ID (e.g., "org.prismlauncher.PrismLauncher")
+# @param       $1 - Flatpak application ID (e.g., "io.github.ElyPrismLauncher.ElyPrismLauncher")
 # @return      0 if installed, 1 if not installed or flatpak unavailable
 # @example
-#   if is_flatpak_installed "org.prismlauncher.PrismLauncher"; then
-#       echo "PrismLauncher Flatpak is installed"
+#   if is_flatpak_installed "io.github.ElyPrismLauncher.ElyPrismLauncher"; then
+#       echo "ElyPrismLauncher Flatpak is installed"
 #   fi
 # -----------------------------------------------------------------------------
 is_flatpak_installed() {
@@ -146,7 +146,7 @@ is_flatpak_installed() {
 # @param       $1 - Full path to the AppImage file
 # @return      0 if exists and executable, 1 otherwise
 # @example
-#   if is_appimage_available "$HOME/.local/share/PrismLauncher/PrismLauncher.AppImage"; then
+#   if is_appimage_available "$HOME/.local/share/ElyPrismLauncher/ElyPrismLauncher.AppImage"; then
 #       echo "AppImage is ready to use"
 #   fi
 # -----------------------------------------------------------------------------
@@ -156,8 +156,8 @@ is_appimage_available() {
 }
 
 # -----------------------------------------------------------------------------
-# @function    detect_prismlauncher
-# @description Detects if PrismLauncher is installed (AppImage or Flatpak).
+# @function    detect_elyelyelyprismlauncher
+# @description Detects if ElyPrismLauncher is installed (AppImage or Flatpak).
 #              Sets PRISM_TYPE, PRISM_DATA_DIR, and PRISM_EXECUTABLE variables.
 #              Uses PREFER_FLATPAK (set by configure_launcher_paths) to determine
 #              check order: Flatpak first on immutable OS, AppImage first otherwise.
@@ -166,10 +166,10 @@ is_appimage_available() {
 # @global      PRISM_DETECTED   - (output) Set to true/false
 # @global      PRISM_TYPE       - (output) "appimage" or "flatpak"
 # @global      PRISM_DATA_DIR   - (output) Path to data directory
-# @global      PRISM_EXECUTABLE - (output) Command to run PrismLauncher
+# @global      PRISM_EXECUTABLE - (output) Command to run ElyPrismLauncher
 # @return      0 if detected, 1 if not found
 # -----------------------------------------------------------------------------
-detect_prismlauncher() {
+detect_elyelyelyprismlauncher() {
     PRISM_DETECTED=false
     PRISM_TYPE=""
     PRISM_DATA_DIR=""
@@ -182,7 +182,7 @@ detect_prismlauncher() {
             PRISM_TYPE="flatpak"
             PRISM_DATA_DIR="$PRISM_FLATPAK_DATA_DIR"
             PRISM_EXECUTABLE="flatpak run $PRISM_FLATPAK_ID"
-            print_info "Detected Flatpak PrismLauncher (preferred)"
+            print_info "Detected Flatpak ElyPrismLauncher (preferred)"
             return 0
         fi
 
@@ -190,7 +190,7 @@ detect_prismlauncher() {
             PRISM_TYPE="appimage"
             PRISM_DATA_DIR="$PRISM_APPIMAGE_DATA_DIR"
             PRISM_EXECUTABLE="$PRISM_APPIMAGE_PATH"
-            print_info "Detected AppImage PrismLauncher (fallback)"
+            print_info "Detected AppImage ElyPrismLauncher (fallback)"
             return 0
         fi
     else
@@ -199,7 +199,7 @@ detect_prismlauncher() {
             PRISM_TYPE="appimage"
             PRISM_DATA_DIR="$PRISM_APPIMAGE_DATA_DIR"
             PRISM_EXECUTABLE="$PRISM_APPIMAGE_PATH"
-            print_info "Detected AppImage PrismLauncher (preferred)"
+            print_info "Detected AppImage ElyPrismLauncher (preferred)"
             return 0
         fi
 
@@ -207,7 +207,7 @@ detect_prismlauncher() {
             PRISM_TYPE="flatpak"
             PRISM_DATA_DIR="$PRISM_FLATPAK_DATA_DIR"
             PRISM_EXECUTABLE="flatpak run $PRISM_FLATPAK_ID"
-            print_info "Detected Flatpak PrismLauncher (fallback)"
+            print_info "Detected Flatpak ElyPrismLauncher (fallback)"
             return 0
         fi
     fi
@@ -221,13 +221,13 @@ detect_prismlauncher() {
 
 # -----------------------------------------------------------------------------
 # @function    configure_launcher_paths
-# @description Main configuration function that detects PrismLauncher and sets
+# @description Main configuration function that detects ElyPrismLauncher and sets
 #              up CREATION_* and ACTIVE_* variables. This MUST be called early
 #              in the installation process before any other module tries to
 #              access launcher paths.
 #
-#              PrismLauncher is used for both instance creation (CLI) and
-#              gameplay. Both CREATION_* and ACTIVE_* point to PrismLauncher.
+#              ElyPrismLauncher is used for both instance creation (CLI) and
+#              gameplay. Both CREATION_* and ACTIVE_* point to ElyPrismLauncher.
 #
 # @param       None
 # @global      All CREATION_* and ACTIVE_* variables are set
@@ -258,29 +258,29 @@ configure_launcher_paths() {
     # LAUNCHER DETECTION
     # =========================================================================
 
-    # PrismLauncher is the sole launcher for both instance creation and gameplay
-    if detect_prismlauncher; then
-        CREATION_LAUNCHER="prismlauncher"
+    # ElyPrismLauncher is the sole launcher for both instance creation and gameplay
+    if detect_elyelyelyprismlauncher; then
+        CREATION_LAUNCHER="elyelyelyprismlauncher"
         CREATION_LAUNCHER_TYPE="$PRISM_TYPE"
         CREATION_DATA_DIR="$PRISM_DATA_DIR"
         CREATION_INSTANCES_DIR="$PRISM_DATA_DIR/instances"
         CREATION_EXECUTABLE="$PRISM_EXECUTABLE"
-        print_success "Creation launcher: PrismLauncher ($PRISM_TYPE)"
+        print_success "Creation launcher: ElyPrismLauncher ($PRISM_TYPE)"
         print_info "  Data directory: $CREATION_DATA_DIR"
         print_info "  Instances: $CREATION_INSTANCES_DIR"
 
-        ACTIVE_LAUNCHER="prismlauncher"
+        ACTIVE_LAUNCHER="elyelyelyprismlauncher"
         ACTIVE_LAUNCHER_TYPE="$PRISM_TYPE"
         ACTIVE_DATA_DIR="$PRISM_DATA_DIR"
         ACTIVE_INSTANCES_DIR="$PRISM_DATA_DIR/instances"
         ACTIVE_EXECUTABLE="$PRISM_EXECUTABLE"
         ACTIVE_LAUNCHER_SCRIPT="$PRISM_DATA_DIR/minecraftSplitscreen.sh"
-        print_success "Active launcher: PrismLauncher ($PRISM_TYPE)"
+        print_success "Active launcher: ElyPrismLauncher ($PRISM_TYPE)"
         print_info "  Data directory: $ACTIVE_DATA_DIR"
         print_info "  Launcher script: $ACTIVE_LAUNCHER_SCRIPT"
     else
         CREATION_LAUNCHER=""
-        print_warning "No PrismLauncher detected - will attempt download"
+        print_warning "No ElyPrismLauncher detected - will attempt download"
     fi
 
     # NOTE: Directories are NOT created here during detection phase.
@@ -293,21 +293,21 @@ configure_launcher_paths() {
 # =============================================================================
 
 # -----------------------------------------------------------------------------
-# @function    set_creation_launcher_prismlauncher
-# @description Updates the creation launcher configuration after PrismLauncher
+# @function    set_creation_launcher_elyelyelyprismlauncher
+# @description Updates the creation launcher configuration after ElyPrismLauncher
 #              is downloaded or installed. Also sets ACTIVE_* variables if no
 #              active launcher is configured yet.
 # @param       $1 - type: "appimage" or "flatpak"
-# @param       $2 - executable: Path or command to run PrismLauncher
+# @param       $2 - executable: Path or command to run ElyPrismLauncher
 # @global      CREATION_* variables are updated
 # @global      ACTIVE_* variables may be updated if not set
 # @return      0 always
 # -----------------------------------------------------------------------------
-set_creation_launcher_prismlauncher() {
+set_creation_launcher_elyelyelyprismlauncher() {
     local type="$1"
     local executable="$2"
 
-    CREATION_LAUNCHER="prismlauncher"
+    CREATION_LAUNCHER="elyelyelyprismlauncher"
     CREATION_LAUNCHER_TYPE="$type"
 
     if [[ "$type" == "appimage" ]]; then
@@ -321,9 +321,9 @@ set_creation_launcher_prismlauncher() {
 
     mkdir -p "$CREATION_INSTANCES_DIR"
 
-    # If no active launcher set yet, use PrismLauncher
+    # If no active launcher set yet, use ElyPrismLauncher
     if [[ -z "$ACTIVE_LAUNCHER" ]]; then
-        ACTIVE_LAUNCHER="prismlauncher"
+        ACTIVE_LAUNCHER="elyelyelyprismlauncher"
         ACTIVE_LAUNCHER_TYPE="$type"
         ACTIVE_DATA_DIR="$CREATION_DATA_DIR"
         ACTIVE_INSTANCES_DIR="$CREATION_INSTANCES_DIR"

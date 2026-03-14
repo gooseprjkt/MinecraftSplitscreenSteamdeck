@@ -5,7 +5,7 @@
 # @date        2026-01-25
 # @author      Minecraft Splitscreen Steam Deck Project
 # @license     MIT
-# @repository  https://github.com/aradanmn/MinecraftSplitscreenSteamdeck
+# @repository  https://github.com/gooseprjkt/MinecraftSplitscreenSteamdeck
 #
 # @description
 #   Automatic Java detection, installation, and management for Minecraft.

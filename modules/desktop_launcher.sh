@@ -5,7 +5,7 @@
 # @date        2026-02-01
 # @author      Minecraft Splitscreen Steam Deck Project
 # @license     MIT
-# @repository  https://github.com/aradanmn/MinecraftSplitscreenSteamdeck
+# @repository  https://github.com/gooseprjkt/MinecraftSplitscreenSteamdeck
 #
 # @description
 #   Creates native desktop launchers and application menu integration for the
@@ -49,7 +49,7 @@
 #
 # ICON HIERARCHY:
 # 1. SteamGridDB custom icon (downloaded, professional appearance)
-# 2. PrismLauncher instance icon (fallback)
+# 2. ElyPrismLauncher instance icon (fallback)
 # 3. System generic icon (ultimate fallback)
 #
 # DESKTOP FILE LOCATIONS:

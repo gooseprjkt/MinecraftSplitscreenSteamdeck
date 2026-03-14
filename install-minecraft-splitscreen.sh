@@ -4,7 +4,7 @@
 # =============================================================================
 # Version: 3.0.0 (commit: auto-populated at runtime)
 # Last Modified: 2026-01-23
-# Source: https://github.com/aradanmn/MinecraftSplitscreenSteamdeck
+# Source: https://github.com/gooseprjkt/MinecraftSplitscreenSteamdeck
 #
 # This is the new, clean modular entry point for the Minecraft Splitscreen installer.
 # All functionality has been moved to organized modules for better maintainability.
@@ -26,8 +26,8 @@
 # Modules are downloaded temporarily and automatically cleaned up when the script completes.
 #
 # Usage:
-#   # Standard (uses default repository: aradanmn/MinecraftSplitscreenSteamdeck, branch: main)
-#   curl -fsSL https://raw.githubusercontent.com/aradanmn/MinecraftSplitscreenSteamdeck/main/install-minecraft-splitscreen.sh | bash
+#   # Standard (uses default repository: gooseprjkt/MinecraftSplitscreenSteamdeck, branch: main)
+#   curl -fsSL https://raw.githubusercontent.com/gooseprjkt/MinecraftSplitscreenSteamdeck/main/install-minecraft-splitscreen.sh | bash
 #
 #   # From a fork or different branch (auto-detects from URL via environment variable)
 #   URL="https://raw.githubusercontent.com/OWNER/REPO/BRANCH/install-minecraft-splitscreen.sh"
@@ -95,7 +95,7 @@ MODULES_DIR="$(mktemp -d -t minecraft-modules-XXXXXX)"
 # REPOSITORY CONFIGURATION
 # =============================================================================
 # Default values - used when running locally or when URL parsing fails
-DEFAULT_REPO_OWNER="aradanmn"
+DEFAULT_REPO_OWNER="gooseprjkt"
 DEFAULT_REPO_NAME="MinecraftSplitscreenSteamdeck"
 DEFAULT_REPO_BRANCH="main"
 

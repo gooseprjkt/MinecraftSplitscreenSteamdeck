@@ -3,9 +3,9 @@
 # @file instance_creation.sh
 # @version     3.0.1
 # @date        2026-03-07
-# @author      aradanmn (forked from FlyingEwok)
+# @author      gooseprjkt (forked from FlyingEwok)
 # @license     MIT
-# @repository  https://github.com/aradanmn/MinecraftSplitscreenSteamdeck
+# @repository  https://github.com/gooseprjkt/MinecraftSplitscreenSteamdeck
 #
 # @description
 #   Instance Creation Module for Minecraft Splitscreen Steam Deck Installer.
@@ -14,7 +14,7 @@
 #   launched separately for multi-player splitscreen gaming.
 #
 #   This module manages the complete lifecycle of instance creation including:
-#   - CLI-based instance creation via PrismLauncher
+#   - CLI-based instance creation via ElyPrismLauncher
 #   - Manual fallback instance creation when CLI is unavailable
 #   - Fabric mod loader installation and configuration
 #   - Mod downloading and installation from Modrinth/CurseForge
@@ -49,7 +49,7 @@
 # @function create_instances
 # @description
 #   Creates 4 identical Minecraft instances for splitscreen play. Uses
-#   PrismLauncher CLI when available, falling back to manual creation if needed.
+#   ElyPrismLauncher CLI when available, falling back to manual creation if needed.
 #   Each instance gets the same mods but separate configurations for splitscreen.
 #
 #   The function handles both fresh installations and updates to existing
@@ -152,11 +152,11 @@ create_instances() {
         print_progress "Creating Minecraft $MC_VERSION instance with Fabric..."
         local cli_success=false
 
-        # Check if PrismLauncher executable exists and is accessible
+        # Check if ElyPrismLauncher executable exists and is accessible
         local prism_exec
         if prism_exec=$(get_prism_executable) && [[ -x "$prism_exec" ]]; then
             # Try multiple CLI creation approaches with progressively fewer parameters
-            # This handles different PrismLauncher versions that may have varying CLI support
+            # This handles different ElyPrismLauncher versions that may have varying CLI support
 
             print_info "Attempting CLI instance creation..."
 
@@ -191,12 +191,12 @@ create_instances() {
             # Re-enable strict error handling
             set -e
         else
-            print_info "PrismLauncher executable not available, using manual method"
+            print_info "ElyPrismLauncher executable not available, using manual method"
         fi
 
         # FALLBACK: Manual instance creation when CLI methods fail
         # This creates instances manually by writing configuration files directly
-        # This ensures compatibility even with older PrismLauncher versions that lack CLI support
+        # This ensures compatibility even with older ElyPrismLauncher versions that lack CLI support
         if [[ "$cli_success" == false ]]; then
             print_info "Using manual instance creation method..."
             local instance_dir="$instances_dir/$instance_name"
@@ -213,7 +213,7 @@ create_instances() {
                 continue  # Skip to next instance
             }
 
-            # Create instance.cfg - PrismLauncher's main instance configuration file
+            # Create instance.cfg - ElyPrismLauncher's main instance configuration file
             # This file defines the instance metadata, version, and launcher settings
             cat > "$instance_dir/instance.cfg" <<EOF
 InstanceType=OneSix
@@ -236,7 +236,7 @@ EOF
                 continue  # Skip to next instance
             fi
 
-            # Create mmc-pack.json - MultiMC/PrismLauncher component definition file
+            # Create mmc-pack.json - MultiMC/ElyPrismLauncher component definition file
             # This file defines the mod loader stack: LWJGL3 -> Minecraft -> Intermediary -> Fabric
             # Components are loaded in dependency order to ensure proper mod support
             cat > "$instance_dir/mmc-pack.json" <<EOF
@@ -336,7 +336,7 @@ EOF
 #   Also configures splitscreen-specific audio settings, muting music on
 #   instances 2-4 to prevent audio overlap during splitscreen play.
 #
-# @param $1 instance_dir - Path to the PrismLauncher instance directory
+# @param $1 instance_dir - Path to the ElyPrismLauncher instance directory
 # @param $2 instance_name - Display name of the instance for logging
 # @param $3 preserve_options - Whether to preserve existing options.txt (true/false)
 #

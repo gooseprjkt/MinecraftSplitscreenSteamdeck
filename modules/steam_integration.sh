@@ -5,7 +5,7 @@
 # @date        2026-02-01
 # @author      Minecraft Splitscreen Steam Deck Project
 # @license     MIT
-# @repository  https://github.com/aradanmn/MinecraftSplitscreenSteamdeck
+# @repository  https://github.com/gooseprjkt/MinecraftSplitscreenSteamdeck
 #
 # @description
 #   Handles the integration of Minecraft Splitscreen launcher with Steam,
@@ -234,7 +234,7 @@ setup_steam_integration() {
             set +e
 
             print_info "   → Downloading Steam integration script..."
-            if curl -sSL "${REPO_RAW_URL:-https://raw.githubusercontent.com/aradanmn/MinecraftSplitscreenSteamdeck/${REPO_BRANCH:-main}}/add-to-steam.py" -o "$steam_script_temp" 2>/dev/null; then
+            if curl -sSL "${REPO_RAW_URL:-https://raw.githubusercontent.com/gooseprjkt/MinecraftSplitscreenSteamdeck/${REPO_BRANCH:-main}}/add-to-steam.py" -o "$steam_script_temp" 2>/dev/null; then
                 print_info "   → Executing Steam integration script..."
                 # Pass launcher paths from path_configuration.sh to the Python script
                 # Arguments: <launcher_script_path> <data_dir> <launcher_name>

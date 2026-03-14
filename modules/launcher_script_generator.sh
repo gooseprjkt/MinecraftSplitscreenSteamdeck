@@ -5,7 +5,7 @@
 # @date        2026-03-07
 # @author      Minecraft Splitscreen Steam Deck Project
 # @license     MIT
-# @repository  https://github.com/aradanmn/MinecraftSplitscreenSteamdeck
+# @repository  https://github.com/gooseprjkt/MinecraftSplitscreenSteamdeck
 #
 # @description
 #   Generates the minecraftSplitscreen.sh launcher script with correct paths
@@ -32,7 +32,7 @@
 #
 # @changelog
 #   3.0.10 (2026-03-07) - Fix: Zombie process reaping, cleanup_exit reentrancy guard, gamescope cleanup race prevention; default mode changed to dynamic; remove dead launchGames()
-#   3.0.9 (2026-02-08) - Fix: Pre-warm PrismLauncher on first launch to prevent "still initializing" errors
+#   3.0.9 (2026-02-08) - Fix: Pre-warm ElyPrismLauncher on first launch to prevent "still initializing" errors
 #   3.0.8 (2026-02-08) - Fix: Import desktop session env for SSH; stop killing plasmashell; use FullArea in KWin JS; detect WAYLAND_DISPLAY in game mode check
 #   3.0.7 (2026-02-07) - Fix: KDE 6 KWin API compatibility (Object.assign for geometry, tile=null); verbose KWin JS logging
 #   3.0.6 (2026-02-07) - Feat: FULLSCREEN-only mode + KWin positioning (avoids Splitscreen mod Wayland crash); no-restart dynamic scaling
@@ -60,7 +60,7 @@
 # @description Generate the minecraftSplitscreen.sh launcher script with
 #              configuration values baked in via placeholder replacement.
 # @param       $1 - output_path: Path for the generated script
-# @param       $2 - launcher_name: "PrismLauncher"
+# @param       $2 - launcher_name: "ElyPrismLauncher"
 # @param       $3 - launcher_type: "appimage" or "flatpak"
 # @param       $4 - launcher_exec: Full path or flatpak command
 # @param       $5 - launcher_dir: Launcher data directory
@@ -69,9 +69,9 @@
 # @global      REPO_URL - (input, optional) Repository URL for embedding
 # @return      0 on success
 # @example
-#   generate_splitscreen_launcher "/path/to/script.sh" "PrismLauncher" "flatpak" \
-#       "flatpak run org.prismlauncher.PrismLauncher" "/home/user/.var/app/org.prismlauncher.PrismLauncher/data/PrismLauncher" \
-#       "/home/user/.var/app/org.prismlauncher.PrismLauncher/data/PrismLauncher/instances"
+#   generate_splitscreen_launcher "/path/to/script.sh" "ElyPrismLauncher" "flatpak" \
+#       "flatpak run io.github.ElyPrismLauncher.ElyPrismLauncher" "/home/user/.var/app/io.github.ElyPrismLauncher.ElyPrismLauncher/data/ElyPrismLauncher" \
+#       "/home/user/.var/app/io.github.ElyPrismLauncher.ElyPrismLauncher/data/ElyPrismLauncher/instances"
 generate_splitscreen_launcher() {
     local output_path="$1"
     local launcher_name="$2"
@@ -236,7 +236,7 @@ validate_launcher() {
         # For Flatpak, check if the app is installed
         local flatpak_id
         case "$LAUNCHER_NAME" in
-            "PrismLauncher"|*) flatpak_id="org.prismlauncher.PrismLauncher" ;;
+            "ElyPrismLauncher"|*) flatpak_id="io.github.ElyPrismLauncher.ElyPrismLauncher" ;;
         esac
         if command -v flatpak >/dev/null 2>&1 && flatpak list --app 2>/dev/null | grep -q "$flatpak_id"; then
             launcher_available=true
@@ -313,7 +313,7 @@ EOF
 # =============================================================================
 
 # Pre-start the launcher so it's ready to accept instance launch commands.
-# PrismLauncher ignores -l commands received while still initializing.
+# ElyPrismLauncher ignores -l commands received while still initializing.
 # This starts the launcher in the background and waits for it to be ready.
 LAUNCHER_PREWARMED=0
 prewarmLauncher() {
@@ -328,24 +328,24 @@ prewarmLauncher() {
     local launcher_pid=$!
     disown $launcher_pid 2>/dev/null || true
 
-    # Wait for PrismLauncher to finish initializing (up to 30 seconds)
+    # Wait for ElyPrismLauncher to finish initializing (up to 30 seconds)
     local waited=0
     local max_wait=30
     while [ $waited -lt $max_wait ]; do
         sleep 1
         waited=$((waited + 1))
 
-        # Check if a Java process from PrismLauncher's managed instances exists
-        # OR if the PrismLauncher GUI has fully loaded (process is stable and responsive)
+        # Check if a Java process from ElyPrismLauncher's managed instances exists
+        # OR if the ElyPrismLauncher GUI has fully loaded (process is stable and responsive)
         # We detect readiness by checking if the launcher's QLocalServer socket exists
         local socket_path=""
         if [ "$LAUNCHER_TYPE" = "flatpak" ]; then
-            socket_path=$(find /tmp/.flatpak-org.prismlauncher.PrismLauncher*/tmp/ -name "PrismLauncher-*" -type s 2>/dev/null | head -1)
+            socket_path=$(find /tmp/.flatpak-io.github.ElyPrismLauncher.ElyPrismLauncher*/tmp/ -name "ElyPrismLauncher-*" -type s 2>/dev/null | head -1)
             if [ -z "$socket_path" ]; then
-                socket_path=$(find /run/user/$(id -u)/ -name "PrismLauncher*" -type s 2>/dev/null | head -1)
+                socket_path=$(find /run/user/$(id -u)/ -name "ElyPrismLauncher*" -type s 2>/dev/null | head -1)
             fi
         else
-            socket_path=$(find /tmp/ -name "PrismLauncher-*" -type s 2>/dev/null | head -1)
+            socket_path=$(find /tmp/ -name "ElyPrismLauncher-*" -type s 2>/dev/null | head -1)
         fi
 
         if [ -n "$socket_path" ]; then
@@ -927,7 +927,7 @@ stopInstance() {
     local wrapper_pid="${INSTANCE_WRAPPER_PIDS[$idx]}"
 
     # Kill Java process (graceful then force)
-    # Note: Java is NOT a direct child — it's spawned by PrismLauncher inside the
+    # Note: Java is NOT a direct child — it's spawned by ElyPrismLauncher inside the
     # wrapper subshell. Once the wrapper exits, Java is reparented to init/systemd,
     # so `wait` would fail. The pkill fallback below handles any survivors.
     if [ -n "$pid" ] && kill -0 "$pid" 2>/dev/null; then
@@ -1583,7 +1583,7 @@ runDynamicSplitscreen() {
         installBorderEnforcer
     fi
 
-    # Enforce memory settings before PrismLauncher loads configs
+    # Enforce memory settings before ElyPrismLauncher loads configs
     enforceMemorySettings
 
     # Pre-start the launcher so it's ready to accept instance launch commands
@@ -1647,7 +1647,7 @@ runStaticSplitscreen() {
         installBorderEnforcer
     fi
 
-    # Enforce memory settings before PrismLauncher loads configs
+    # Enforce memory settings before ElyPrismLauncher loads configs
     enforceMemorySettings
 
     # Pre-start the launcher so it's ready to accept instance launch commands
@@ -1786,13 +1786,13 @@ killAllInstances() {
     pkill -f "kde-inhibit.*$LAUNCHER_NAME" 2>/dev/null || true
 }
 
-# Kill the PrismLauncher process itself
+# Kill the ElyPrismLauncher process itself
 killLauncher() {
     log_info "Stopping $LAUNCHER_NAME..."
     if [ "$LAUNCHER_TYPE" = "flatpak" ]; then
         local flatpak_id=""
         case "$LAUNCHER_NAME" in
-            "PrismLauncher"|*) flatpak_id="org.prismlauncher.PrismLauncher" ;;
+            "ElyPrismLauncher"|*) flatpak_id="io.github.ElyPrismLauncher.ElyPrismLauncher" ;;
         esac
         flatpak kill "$flatpak_id" 2>/dev/null || true
     fi
@@ -1800,8 +1800,8 @@ killLauncher() {
     sleep 1
 }
 
-# Enforce memory settings in instance configs before PrismLauncher starts.
-# PrismLauncher overwrites instance.cfg when it saves state, so we must
+# Enforce memory settings in instance configs before ElyPrismLauncher starts.
+# ElyPrismLauncher overwrites instance.cfg when it saves state, so we must
 # set these BEFORE prewarmLauncher() to ensure correct values are loaded.
 enforceMemorySettings() {
     local max_mem=1536
@@ -2099,7 +2099,7 @@ LAUNCHER_SCRIPT_EOF
     sed -i "s|__SCRIPT_VERSION__|${SCRIPT_VERSION:-3.0.0}|g" "$output_path"
     sed -i "s|__COMMIT_HASH__|${commit_hash}|g" "$output_path"
     sed -i "s|__GENERATION_DATE__|${generation_date}|g" "$output_path"
-    sed -i "s|__REPO_URL__|${REPO_URL:-https://github.com/aradanmn/MinecraftSplitscreenSteamdeck}|g" "$output_path"
+    sed -i "s|__REPO_URL__|${REPO_URL:-https://github.com/gooseprjkt/MinecraftSplitscreenSteamdeck}|g" "$output_path"
 
     # Make executable
     chmod +x "$output_path"

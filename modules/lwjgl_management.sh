@@ -5,7 +5,7 @@
 # @date        2026-02-01
 # @author      Minecraft Splitscreen Steam Deck Project
 # @license     MIT
-# @repository  https://github.com/aradanmn/MinecraftSplitscreenSteamdeck
+# @repository  https://github.com/gooseprjkt/MinecraftSplitscreenSteamdeck
 #
 # @description
 #   Dynamic LWJGL (Lightweight Java Game Library) version detection for Minecraft.

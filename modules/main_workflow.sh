@@ -5,7 +5,7 @@
 # @date        2026-03-07
 # @author      Minecraft Splitscreen Steam Deck Project
 # @license     MIT
-# @repository  https://github.com/aradanmn/MinecraftSplitscreenSteamdeck
+# @repository  https://github.com/gooseprjkt/MinecraftSplitscreenSteamdeck
 #
 # @description
 #   Main orchestration module for the complete splitscreen installation process.
@@ -38,7 +38,7 @@
 #     - generate_launcher_script: Generate minecraftSplitscreen.sh
 #
 # @changelog
-#   3.0.3 (2026-03-07) - Removed PollyMC; PrismLauncher is now the sole launcher
+#   3.0.3 (2026-03-07) - Removed PollyMC; ElyPrismLauncher is now the sole launcher
 #   3.0.2 (2026-02-07) - Updated dynamic mode summary to show KWin scripting status
 #   3.0.1 (2026-02-01) - Updated launch instructions to show CLI arguments
 #   3.0.0 (2026-02-01) - Added dynamic mode dependency check and status display
@@ -54,12 +54,12 @@
 #
 # INSTALLATION WORKFLOW:
 # 1. WORKSPACE SETUP: Create directories and initialize environment
-# 2. CORE SETUP: Java detection, PrismLauncher download, CLI verification
+# 2. CORE SETUP: Java detection, ElyPrismLauncher download, CLI verification
 # 3. VERSION DETECTION: Minecraft and Fabric version determination
 # 4. ACCOUNT SETUP: Download offline splitscreen player accounts
 # 5. MOD COMPATIBILITY: Query APIs and determine compatible mod versions
 # 6. USER SELECTION: Interactive mod selection interface
-# 7. INSTANCE CREATION: Create 4 splitscreen instances with PrismLauncher CLI
+# 7. INSTANCE CREATION: Create 4 splitscreen instances with ElyPrismLauncher CLI
 # 8. LAUNCHER SCRIPT GENERATION: Generate the splitscreen launcher script
 # 9. INTEGRATION: Optional Steam and desktop launcher integration
 # 10. COMPLETION: Summary report and usage instructions
@@ -71,7 +71,7 @@
 # - Multiple validation checkpoints ensure data integrity
 #
 # LAUNCHER APPROACH:
-# PrismLauncher is used for both instance creation and gameplay:
+# ElyPrismLauncher is used for both instance creation and gameplay:
 # - CLI automation for reliable instance creation with proper Fabric setup
 # - Stable, well-supported launcher with broad community backing
 #
@@ -104,7 +104,7 @@ main() {
 
     # WORKSPACE SETUP: Create and navigate to working directory
     # Use CREATION_DATA_DIR as that's where we'll create instances initially
-    local workspace_dir="${CREATION_DATA_DIR:-$HOME/.local/share/PrismLauncher}"
+    local workspace_dir="${CREATION_DATA_DIR:-$HOME/.local/share/ElyPrismLauncher}"
     print_progress "Initializing installation workspace: $workspace_dir"
     mkdir -p "$workspace_dir"
     cd "$workspace_dir" || exit 1
@@ -114,13 +114,13 @@ main() {
     # CORE SYSTEM REQUIREMENTS VALIDATION
     # =============================================================================
 
-    # Only download PrismLauncher if we don't have a creation launcher yet
+    # Only download ElyPrismLauncher if we don't have a creation launcher yet
     if [[ -z "$CREATION_LAUNCHER" ]]; then
-        download_prism_launcher        # Download PrismLauncher AppImage for CLI automation
+        download_prism_launcher        # Download ElyPrismLauncher AppImage for CLI automation
     fi
 
     if [[ -n "$CREATION_EXECUTABLE" ]] && ! verify_prism_cli; then
-        print_info "PrismLauncher CLI unavailable - will use manual instance creation"
+        print_info "ElyPrismLauncher CLI unavailable - will use manual instance creation"
     fi
 
     # =============================================================================
@@ -143,7 +143,7 @@ main() {
     # These accounts enable splitscreen without requiring multiple Microsoft accounts
     # Each player (P1, P2, P3, P4) gets a separate offline profile for identification
     # IMPORTANT: We merge accounts to preserve any existing Microsoft/other accounts
-    local accounts_url="${REPO_RAW_URL:-https://raw.githubusercontent.com/aradanmn/MinecraftSplitscreenSteamdeck/${REPO_BRANCH:-main}}/accounts.json"
+    local accounts_url="${REPO_RAW_URL:-https://raw.githubusercontent.com/gooseprjkt/MinecraftSplitscreenSteamdeck/${REPO_BRANCH:-main}}/accounts.json"
     local accounts_temp
     accounts_temp=$(mktemp)
     local accounts_path="$CREATION_DATA_DIR/accounts.json"
@@ -183,7 +183,7 @@ main() {
     # =============================================================================
 
 
-    create_instances             # Create 4 splitscreen instances using PrismLauncher CLI with comprehensive fallbacks
+    create_instances             # Create 4 splitscreen instances using ElyPrismLauncher CLI with comprehensive fallbacks
 
     # =============================================================================
     # LAUNCHER SCRIPT GENERATION PHASE: Generate splitscreen launcher with correct paths
@@ -267,7 +267,7 @@ main() {
     echo ""
     echo "🏆 TECHNICAL ACHIEVEMENTS COMPLETED:"
     echo "✅ Java 21+ detection and configuration"
-    echo "✅ Automated instance creation via PrismLauncher CLI"
+    echo "✅ Automated instance creation via ElyPrismLauncher CLI"
     echo "✅ Complete Fabric dependency chain implementation"
     echo "✅ 4 splitscreen instances created and configured (Player 1-4)"
     echo "✅ Fabric mod loader installation with proper dependency resolution"
@@ -363,7 +363,7 @@ main() {
     echo "3. 🎯 STEAM INTEGRATION:"
     echo "   Method: Launch from Steam library or Big Picture mode"
     echo "   Benefits: Steam Deck Game Mode integration, Steam Input support"
-    echo "   Availability: $(if grep -q "PollyMC\|PrismLauncher" ~/.steam/steam/userdata/*/config/shortcuts.vdf 2>/dev/null; then echo "✅ Configured"; else echo "❌ Not configured"; fi)"
+    echo "   Availability: $(if grep -q "PollyMC\|ElyPrismLauncher" ~/.steam/steam/userdata/*/config/shortcuts.vdf 2>/dev/null; then echo "✅ Configured"; else echo "❌ Not configured"; fi)"
     echo ""
 
     # =============================================================================
@@ -457,7 +457,7 @@ main() {
     echo "📋 Log file: $(get_log_file)"
     echo ""
     echo "For troubleshooting or updates, visit:"
-    echo "${REPO_URL:-https://github.com/aradanmn/MinecraftSplitscreenSteamdeck}"
+    echo "${REPO_URL:-https://github.com/gooseprjkt/MinecraftSplitscreenSteamdeck}"
     echo "=========================================="
 }
 
